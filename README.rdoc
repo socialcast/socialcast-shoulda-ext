@@ -10,16 +10,16 @@ Test if the count for a model has changed, and by how much.  Requires the contex
 Provides the following matcher methods:
 
 - create_record(klass_or_symbol)
-  alias for change_record_count.for(klass_or_symbol).by(1)
+alias for change_record_count.for(klass_or_symbol).by(1)
 
 - create_records(klass_or_symbol, amount)
-  alias for change_record_count.for(klass_or_symbol).by(amount)
+alias for change_record_count.for(klass_or_symbol).by(amount)
 
 - destroy_record(klass_or_symbol)
-  alias for change_record_count.for(klass_or_symbol).by(-1)
+alias for change_record_count.for(klass_or_symbol).by(-1)
 
 - destroy_records(klass_or_symbol, amount) 
-  alias for change_record_count.for(klass_or_symbol).by(-amount)
+alias for change_record_count.for(klass_or_symbol).by(-amount)
 
 - change_record_count
   Tests the difference in record count before and after the current setup/subject block
