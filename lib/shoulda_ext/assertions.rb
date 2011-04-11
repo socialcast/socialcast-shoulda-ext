@@ -12,6 +12,3 @@ module ShouldaExt
     end
   end
 end
-
-
-

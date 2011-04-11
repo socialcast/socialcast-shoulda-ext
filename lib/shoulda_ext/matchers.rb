@@ -7,5 +7,3 @@ module ShouldaExt # :nodoc:
   module Matchers # :nodoc:
   end
 end
-
-
