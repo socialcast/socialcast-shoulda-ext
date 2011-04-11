@@ -2,6 +2,14 @@
 = Socialcast Shoulda Extensions
 Adds new matchers and functionality to the shoulda test library
 
+= Installation
+
+In your Gemfile:
+
+  group :test do
+    gem 'socialcast_shoulda_ext', :git => 'git@github.com:socialcast/socialcast-shoulda-ext.git', :require => 'shoulda_ext'
+  end
+
 = Matchers
 
 == RecordCountChangeMatcher
