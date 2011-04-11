@@ -82,16 +82,16 @@ end
 Test if create, update, destroy, or save callbacks were triggered.
 Examples:
 
- context "doing nothing to a record" do
-   subject { Blog.new :title => 'blog title' }
-   should_not trigger_callbacks
- end
- 
- context "creating a record" do
-   subject { Blog.create! :title => 'blog title' }
-   should trigger_callbacks.for :create
-   should_not trigger_callbacks.for :update, :destroy
- end
+context "doing nothing to a record" do
+  subject { Blog.new :title => 'blog title' }
+  should_not trigger_callbacks
+end
+
+context "creating a record" do
+  subject { Blog.create! :title => 'blog title' }
+  should trigger_callbacks.for :create
+  should_not trigger_callbacks.for :update, :destroy
+end
 
 
 = Integrations
