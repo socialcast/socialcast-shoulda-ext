@@ -1,4 +1,6 @@
 
+require 'test/unit'
+
 module Test # :nodoc: all
   module Unit
     class TestCase

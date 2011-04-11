@@ -1,13 +1,39 @@
 module ShouldaExt # :nodoc:
   module Matchers # :nodoc:
     
+    # Check if the controller's response is json
+    # 
+    # Example uses:
+    #  context ":index.json" do
+    #   setup do
+    #     get :index, :format => 'json'
+    #   end
+    #   # Just check to see that the response was json
+    #   should respond_with_json  
+    #
+    #   # Evaluate the hash produced by the json yourself
+    #   should respond_with_json { |json| json.first['blog']['title'] == 'blog post 1'}
+    #   
+    #   # Provide an exact match
+    #   should respond_with_json.exactly(['blog' => {'id' => 1, 'title' => 'blog post 1'}])
+    #
+    #   # Provide an exact match with a block
+    #   should response_with_json.exactly{ |json| JSON.parse(Blog.all.to_json)}
+    # end
+    #  
+    # context ":index.html" do
+    #   setup do
+    #     get :index
+    #   end
+    #  
+    #   # or the negation
+    #   should_not respond_with_json
+    # end 
     def respond_with_json(description = nil, &block)
       RespondWithJsonMatcher.new(self, description, &block)
     end
 
     class RespondWithJsonMatcher
-      attr_accessor :expected_value
-      
       def initialize(context, description = nil, &block)
         @context = context
         @block = block || lambda{|*| true }
@@ -15,6 +41,7 @@ module ShouldaExt # :nodoc:
         @exactly = false
       end
       
+      # Provide an exact result directly or using a block argument
       def exactly(expected_json = nil, &block)
         @exactly = true
         @expected_value = expected_json
