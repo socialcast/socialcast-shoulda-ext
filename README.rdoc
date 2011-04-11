@@ -1,6 +1,7 @@
 
 = Socialcast Shoulda Extensions
 
+Adds new matchers and functionality to the shoulda test library
 
 = Matchers
 
@@ -82,18 +83,13 @@ Provides the following matcher methods:
      should_not respond_with_json
    end
 
-
-
 = Integrations
 
 Currently only integrates with test/unit.  Rspec support to come.
 
+= Shoulda Extensions
 
-= Shoulda Extension
-
-== Patches
-
-=== ContextWithMatcherBeforeHooks
+== ContextWithMatcherBeforeHooks
 
 Adds the ability to define a 'before' method on any method which will be run before each context's setup/subject block.  Used by RecordCountChangeMatcher to record the number of records before the tested operation takes place.
 
