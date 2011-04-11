@@ -10,8 +10,8 @@ class TestRecordCountChangeMatcher < Test::Unit::TestCase
     Blog.first.destroy
   end
   
-  subject { }
-  
+  subject { } # Shoulda likes a subject, even though this test doesn't use one
+
   context "create_record" do
     context "with created record" do
       setup { create_blog }

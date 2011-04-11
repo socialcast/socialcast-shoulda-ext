@@ -8,13 +8,4 @@ module ShouldaExt # :nodoc:
   end
 end
 
-module Test # :nodoc: all
-  module Unit
-    class TestCase
-      extend ShouldaExt::Matchers
-    end
-  end
-end
 
-require 'active_record' unless defined? ActiveRecord
-ActiveRecord::Base.send :include, ShouldaExt::Matchers::TriggerCallbackMatcher::ActiveRecordHooks

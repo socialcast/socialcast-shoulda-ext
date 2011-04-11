@@ -116,3 +116,6 @@ module ShouldaExt # :nodoc:
     end # - TriggerCallbackMatcher
   end # - Matchers
 end # - ShouldaExt
+
+require 'active_record' unless defined? ActiveRecord
+ActiveRecord::Base.send :include, ShouldaExt::Matchers::TriggerCallbackMatcher::ActiveRecordHooks
