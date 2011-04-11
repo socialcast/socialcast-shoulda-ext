@@ -9,6 +9,10 @@ In your Gemfile:
   group :test do
     gem 'socialcast_shoulda_ext', :git => 'git@github.com:socialcast/socialcast-shoulda-ext.git', :require => 'shoulda_ext'
   end
+  
+If you want to include the trigger_callbacks matcher, also add the following to your test helper:
+
+  ShouldaExt::Matchers::TriggerCallbackMatcher.attach_active_record_callback_hooks!
 
 = Matchers
 
