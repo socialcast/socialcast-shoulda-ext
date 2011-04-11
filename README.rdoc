@@ -20,12 +20,12 @@ Provides the following matcher methods:
 - change_record_count
   Tests the difference in record count before and after the current setup/subject block
   Can be used with the follow methods:
-   - for(klass_or_symbol)
-     Provides the class which the test is being performed on.  Can be a constant or a symbol
+  - for(klass_or_symbol)
+      Provides the class which the test is being performed on.  Can be a constant or a symbol
 
-   - by(amount)
-     Provides an expected difference for the number of records for the specified class.
-     Excluding this number will allow the matcher to check for any difference
+  - by(amount)
+      Provides an expected difference for the number of records for the specified class.
+      Excluding this number will allow the matcher to check for any difference
 
 Examples:
 
