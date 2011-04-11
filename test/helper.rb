@@ -1,29 +1,17 @@
-require 'rubygems'
-require 'bundler'
 ENV['RAILS_ENV'] = 'test'
-begin
-  Bundler.setup(:default, :test)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
 
 # Load Rails 3 instance
-rails_root = File.dirname(__FILE__) + '/rails3_root'
-ENV['BUNDLE_GEMFILE'] = rails_root + '/Gemfile'
+rails_root = File.join(File.dirname(__FILE__), 'rails3_root')
+ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
 require "#{rails_root}/config/environment.rb"
 require 'rails/test_help'
-
-require 'shoulda'
-require 'mocha'
-require 'json'
 
 # Load shoulda extensions
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'shoulda_ext'
 
+# Activate ActiveRecord hooks for trigger_callbacks matcher
 ShouldaExt::Matchers::TriggerCallbackMatcher.attach_active_record_callback_hooks!
 
 # Run the migrations
