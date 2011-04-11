@@ -92,13 +92,17 @@ module ShouldaExt # :nodoc:
       end
     
       def failure_message
-        errors.join("\n")
+        "Expected #{errors.join("\n")}"
       end
 
+      def negative_failure_message
+        "Did not expect #{errors.join("\n")}"
+      end
+      
       def errors
         @errors = []
-        @errors << "Expected #{expected_count} #{@klass.name} records, but found #{@new_count}" if !found_expected? && @expected_change
-        @errors << "Expected #{@klass.name}.count to change" if !found_expected? && !@expected_change
+        @errors << "#{expected_count} #{@klass.name} records, but found #{@new_count}" if !found_expected? && @expected_change
+        @errors << "#{@klass.name}.count to change" if !found_expected? && !@expected_change
         @errors
       end
 
