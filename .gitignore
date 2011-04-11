@@ -1,4 +1,4 @@
-
+.bundle
 Gemfile.lock
 test/debug.log
 test/rails3_root/db/*.sqlite3
