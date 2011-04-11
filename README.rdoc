@@ -24,7 +24,8 @@ Provides the following matcher methods:
        Provides the class which the test is being performed on.  Can be a constant or a symbol
   
      - by(amount)
-       Provides an expected difference for the number of records for the specified class.  Excluding this number will allow the matcher to check for any difference
+       Provides an expected difference for the number of records for the specified class.
+       Excluding this number will allow the matcher to check for any difference
   
    Examples:
    
@@ -34,21 +35,14 @@ Provides the following matcher methods:
          setup do
            post :create, :blog => {:title => 'my blog post', :body => 'Ipsum lorem...'}
          end
- 
-         # All of the below are synonomous
-         should create_record Blog
          should create_record :blog
-         should change_record_count.for(Blog).by(1)
        end
  
        context "without a body" do
          setup do
            post :create, :blog => {:title => 'my blog post' }
          end
- 
-         # All of the below are synonomous
          should_not create_record Blog
-         should_not change_record_count.for(Blog)
        end
  
      end
