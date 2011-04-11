@@ -5,6 +5,7 @@ Adds new matchers and functionality to the shoulda test library
 = Matchers
 
 == RecordCountChangeMatcher
+Test if the count for a model has changed, and by how much.  Requires the context_with_matcher_before_hooks patch, which is included by default.
 
 Provides the following matcher methods:
 
@@ -80,6 +81,11 @@ end
 == TriggerCallbackMatcher
 
 Test if create, update, destroy, or save callbacks were triggered.
+
+Requires running
+ShouldaExt::Matchers::TriggerCallbackMatcher.attach_active_record_callback_hooks!
+in your test suite in order to work properly.
+
 Examples:
 
 context "doing nothing to a record" do
@@ -93,10 +99,9 @@ context "creating a record" do
   should_not trigger_callbacks.for :update, :destroy
 end
 
-
 = Integrations
 
-Currently only integrates with test/unit.  Rspec support to come.
+Currently only integrates with test/unit.  RSpec support to come.
 
 = Shoulda Extensions
 
