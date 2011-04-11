@@ -1,4 +1,6 @@
 
+require 'shoulda_ext/shoulda_patches/context_with_matcher_before_hooks'
+
 module ShouldaExt # :nodoc:
   module Matchers # :nodoc:
     

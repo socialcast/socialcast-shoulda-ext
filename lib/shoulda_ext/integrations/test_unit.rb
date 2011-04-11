@@ -1,4 +1,6 @@
 
+require 'shoulda_ext/assertions'
+require 'shoulda_ext/matchers'
 require 'test/unit'
 
 module Test # :nodoc: all
