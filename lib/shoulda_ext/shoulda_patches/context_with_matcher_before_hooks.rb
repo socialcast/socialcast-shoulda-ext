@@ -4,8 +4,8 @@
 # 
 # Pull Request for getting this functionality into shoulda-context
 # https://github.com/thoughtbot/shoulda-context/pull/2
-module ShouldaExt
-  module ContextWithMatcherBeforeHooks
+module Shoulda
+  class Context
     def should(name_or_matcher, options = {}, &blk)
       if name_or_matcher.respond_to?(:description) && name_or_matcher.respond_to?(:matches?)
         name = name_or_matcher.description
@@ -31,4 +31,3 @@ module ShouldaExt
   end
 end
 
-Shoulda::Context.send :include, ShouldaExt::ContextWithMatcherBeforeHooks
