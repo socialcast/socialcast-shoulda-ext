@@ -12,50 +12,43 @@ module ShouldaExt # :nodoc:
       TriggerCallbackMatcher.new.any
     end
   
-    class TriggerCallbackMatcher # :nodoc:
-      module ActiveRecordHooks 
-        module InheritAndHook
-          def inherited_with_hooks(subclass)
-            inherited_without_hooks(subclass)
-            puts "Attaching trigger_callback test hooks in #{subclass.name}"
-            class << subclass
-              attr_accessor :callback_tester_attrs
-            end
-            subclass.class_eval do
-              @callback_tester_attrs = []
-              CALLBACK_EVENTS.each do |ce|
-                CALLBACK_TYPES.each do |ct|
-                  callback_name = :"#{ce}_#{ct}"
-                  callback_attr = :"called_#{callback_name}"
-                  callback_method, has_on_option = (ce.to_s =~ /_on/ ? [ce.to_s.gsub('_on',''), true] : [callback_name, false]) 
-                  @callback_tester_attrs << callback_attr
-                  attr_accessor callback_attr
-                  send( callback_method, (has_on_option ? {:on => ct} : {})) {
-                    instance_variable_set(:"@#{callback_attr}", true)
-                  }
-
-                  define_method :"#{callback_attr}?" do
-                    instance_variable_get(:"@#{callback_attr}")
-                  end
-                end # - each
-              end  # - each
-            end # - class_eval
-          end # - def self.inherited
-        end # - InheritAndHook
+    class TriggerCallbackMatcher
+      module ActiveRecordHooks # :nodoc:
         
         def self.included(base)
-          base.class_eval do
-            class << self
-              include InheritAndHook
-              alias_method_chain :inherited, :hooks
+          class << base
+            def inherited_with_hooks(subclass)
+              inherited_without_hooks(subclass)
+              ActiveRecordHooks.attach_to subclass
             end
-            alias_method_chain :initialize, :callback_flag_init
+            alias_method_chain :inherited, :hooks
           end
         end
         
-        def initialize_with_callback_flag_init(attributes = nil)
-          reset_callback_flags!
-          initialize_without_callback_flag_init(attributes)
+        def self.attach_to(model)
+          puts "Attaching trigger_callback test hooks in #{model.name}"
+          class << model
+            attr_accessor :callback_tester_attrs
+          end
+          model.class_eval do
+            @callback_tester_attrs = []
+            CALLBACK_EVENTS.each do |ce|
+              CALLBACK_TYPES.each do |ct|
+                callback_name = :"#{ce}_#{ct}"
+                callback_attr = :"called_#{callback_name}"
+                callback_method, has_on_option = (ce.to_s =~ /_on/ ? [ce.to_s.gsub('_on',''), true] : [callback_name, false]) 
+                @callback_tester_attrs << callback_attr
+                attr_accessor callback_attr
+                send( callback_method, (has_on_option ? {:on => ct} : {})) {
+                  instance_variable_set(:"@#{callback_attr}", true)
+                }
+
+                define_method :"#{callback_attr}?" do
+                  !!instance_variable_get(:"@#{callback_attr}")
+                end
+              end # - each
+            end  # - each
+          end # - class_eval
         end
 
         def reset_callback_flags!
@@ -65,9 +58,19 @@ module ShouldaExt # :nodoc:
         end
         
       end # - ActiveRecordHooks
+      
+      # Attach the ActiveRecord callback hooks needed for using
+      # the trigger_callbacks matcher
+      def self.attach_active_record_callback_hooks!
+        puts "Attaching callback hooks into ActiveRecord"
+        ActiveRecord::Base.descendants.each do |model|
+          TriggerCallbackMatcher::ActiveRecordHooks.attach_to model
+        end
+        ActiveRecord::Base.send :include, TriggerCallbackMatcher::ActiveRecordHooks
+      end
   
       # Define the set of callback types (create, update, destroy, save) to test
-      def for(callback_types)
+      def for(*callback_types)
         @callback_types = Array.wrap(callback_types)
         @any_callbacks = false
         self
@@ -116,6 +119,3 @@ module ShouldaExt # :nodoc:
     end # - TriggerCallbackMatcher
   end # - Matchers
 end # - ShouldaExt
-
-require 'active_record' unless defined? ActiveRecord
-ActiveRecord::Base.send :include, ShouldaExt::Matchers::TriggerCallbackMatcher::ActiveRecordHooks
