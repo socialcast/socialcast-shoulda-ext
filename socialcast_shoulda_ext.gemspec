@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = ["geoff@socialcast.com"]
   s.homepage    = "http://github.com/socialcast/socialcast-shoulda-ext"
   s.summary     = %q{adds new shoulda matchers and assertions}
-  s.description = File.read('README')
+  s.description = File.read('README.rdoc')
 
   s.add_runtime_dependency(%q<activerecord>, ["~> 3.0.0"])
   s.add_runtime_dependency(%q<shoulda>, [">= 2.11.1"])
