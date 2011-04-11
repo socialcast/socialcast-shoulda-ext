@@ -1,6 +1,5 @@
 
 = Socialcast Shoulda Extensions
-
 Adds new matchers and functionality to the shoulda test library
 
 = Matchers
@@ -9,73 +8,91 @@ Adds new matchers and functionality to the shoulda test library
 
 Provides the following matcher methods:
 
-  - create_record(klass_or_symbol) # alias for change_record_count.for(klass_or_symbol).by(1)
-  
-  - create_records(klass_or_symbol, amount) # alias for  change_record_count.for(klass_or_symbol).by(amount)
-  
-  - destroy_record(klass_or_symbol) # alias for change_record_count.for(klass_or_symbol).by(-1)
-  
-  - destroy_records(klass_or_symbol, amount) # alias for change_record_count.for(klass_or_symbol).by(-amount)
-  
-  - change_record_count
-    Tests the difference in record count before and after the current setup/subject block
-    Can be used with the follow methods:
-     - for(klass_or_symbol)
-       Provides the class which the test is being performed on.  Can be a constant or a symbol
-  
-     - by(amount)
-       Provides an expected difference for the number of records for the specified class.
-       Excluding this number will allow the matcher to check for any difference
-  
-   Examples:
-   
-     context "creating a blog article" do
- 
-       context "with good parameters" do
-         setup do
-           post :create, :blog => {:title => 'my blog post', :body => 'Ipsum lorem...'}
-         end
-         should create_record :blog
-       end
- 
-       context "without a body" do
-         setup do
-           post :create, :blog => {:title => 'my blog post' }
-         end
-         should_not create_record Blog
-       end
- 
-     end
+- create_record(klass_or_symbol) # alias for change_record_count.for(klass_or_symbol).by(1)
+
+- create_records(klass_or_symbol, amount) # alias for  change_record_count.for(klass_or_symbol).by(amount)
+
+- destroy_record(klass_or_symbol) # alias for change_record_count.for(klass_or_symbol).by(-1)
+
+- destroy_records(klass_or_symbol, amount) # alias for change_record_count.for(klass_or_symbol).by(-amount)
+
+- change_record_count
+  Tests the difference in record count before and after the current setup/subject block
+  Can be used with the follow methods:
+   - for(klass_or_symbol)
+     Provides the class which the test is being performed on.  Can be a constant or a symbol
+
+   - by(amount)
+     Provides an expected difference for the number of records for the specified class.
+     Excluding this number will allow the matcher to check for any difference
+
+Examples:
+
+context "creating a blog article" do
+
+  context "with good parameters" do
+    setup do
+      post :create, :blog => {:title => 'my blog post', :body => 'Ipsum lorem...'}
+    end
+    should create_record :blog
+  end
+
+  context "without a body" do
+    setup do
+      post :create, :blog => {:title => 'my blog post' }
+    end
+    should_not create_record Blog
+  end
+
+end
   
 == RespondWithJson
-   Check if the controller's response is json
+Check if the controller's response is json
    
-   Examples:
-    context ":index.json" do
-     setup do
-       get :index, :format => 'json'
-     end
-     # Just check to see that the response was json
-     should respond_with_json  
+Examples:
+
+context ":index.json" do
+  setup do
+    get :index, :format => 'json'
+  end
+  # Just check to see that the response was json
+  should respond_with_json  
+
+  # Evaluate the hash produced by the json yourself
+  should respond_with_json { |json| json.first['blog']['title'] == 'blog post 1'}
   
-     # Evaluate the hash produced by the json yourself
-     should respond_with_json { |json| json.first['blog']['title'] == 'blog post 1'}
-     
-     # Provide an exact match
-     should respond_with_json.exactly(['blog' => {'id' => 1, 'title' => 'blog post 1'}])
-  
-     # Provide an exact match with a block
-     should response_with_json.exactly{ |json| JSON.parse(Blog.all.to_json)}
-   end
-    
-   context ":index.html" do
-     setup do
-       get :index
-     end
-    
-     # or the negation
-     should_not respond_with_json
-   end
+  # Provide an exact match
+  should respond_with_json.exactly(['blog' => {'id' => 1, 'title' => 'blog post 1'}])
+
+  # Provide an exact match with a block
+  should response_with_json.exactly{ |json| JSON.parse(Blog.all.to_json)}
+end
+ 
+context ":index.html" do
+  setup do
+    get :index
+  end
+ 
+  # or the negation
+  should_not respond_with_json
+end
+
+== TriggerCallbackMatcher
+
+Test if create, update, destroy, or save callbacks were triggered.
+Examples:
+
+ context "doing nothing to a record" do
+   subject { Blog.new :title => 'blog title' }
+   should_not trigger_callbacks
+ end
+ 
+ context "creating a record" do
+   subject { Blog.create! :title => 'blog title' }
+   should trigger_callbacks.for :create
+   should_not trigger_callbacks.for :update, :destroy
+ end
+
 
 = Integrations
 

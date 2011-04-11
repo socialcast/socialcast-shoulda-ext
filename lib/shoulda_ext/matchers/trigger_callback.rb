@@ -4,10 +4,20 @@ module ShouldaExt # :nodoc:
     CALLBACK_EVENTS = [:before, :after, :after_commit_on]
     CALLBACK_TYPES = [:create, :update, :destroy, :save]
     
+    # Test if create, update, destroy, or save callbacks were triggered.
+    # Examples:
     # 
-    # Examples
+    #  context "doing nothing to a record" do
+    #    subject { Blog.new :title => 'blog title' }
+    #    should_not trigger_callbacks
+    #  end
+    #  
+    #  context "creating a record" do
+    #    subject { Blog.create! :title => 'blog title' }
+    #    should trigger_callbacks.for :create
+    #    should_not trigger_callbacks.for :update, :destroy
+    #  end
     # 
-    #
     def trigger_callbacks
       TriggerCallbackMatcher.new.any
     end
