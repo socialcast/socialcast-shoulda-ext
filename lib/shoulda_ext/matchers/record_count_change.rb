@@ -68,6 +68,7 @@ module ShouldaExt # :nodoc:
     class RecordCountChangeMatcher # :nodoc:
 
       def before
+        @triggered_before = true
         @previous_count = @klass.count
       end
 
@@ -101,6 +102,7 @@ module ShouldaExt # :nodoc:
       
       def errors
         @errors = []
+        @errors << "Never received :before call.  Please make sure you are running this with a setup/subject block in the current context and the ContextWithMatcherBeforeHooks patch is installed" if !@triggered_before
         @errors << "#{expected_count} #{@klass.name} records, but found #{@new_count}" if !found_expected? && @expected_change
         @errors << "#{@klass.name}.count to change" if !found_expected? && !@expected_change
         @errors
