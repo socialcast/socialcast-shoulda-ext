@@ -1,2 +1,6 @@
+
+Gemfile.lock
 test/debug.log
-test/shoulda_ext.sqlite3
+test/rails3_root/db/*.sqlite3
+test/rails3_root/tmp
+test/rails3_root/log
