@@ -14,39 +14,48 @@ module ShouldaExt # :nodoc:
   
     class TriggerCallbackMatcher # :nodoc:
       module ActiveRecordHooks 
+        module InheritAndHook
+          def inherited_with_hooks(subclass)
+            inherited_without_hooks(subclass)
+            puts "Attaching trigger_callback test hooks in #{subclass.name}"
+            class << subclass
+              attr_accessor :callback_tester_attrs
+            end
+            subclass.class_eval do
+              @callback_tester_attrs = []
+              CALLBACK_EVENTS.each do |ce|
+                CALLBACK_TYPES.each do |ct|
+                  callback_name = :"#{ce}_#{ct}"
+                  callback_attr = :"called_#{callback_name}"
+                  callback_method, has_on_option = (ce.to_s =~ /_on/ ? [ce.to_s.gsub('_on',''), true] : [callback_name, false]) 
+                  @callback_tester_attrs << callback_attr
+                  attr_accessor callback_attr
+                  send( callback_method, (has_on_option ? {:on => ct} : {})) {
+                    instance_variable_set(:"@#{callback_attr}", true)
+                  }
+
+                  define_method :"#{callback_attr}?" do
+                    instance_variable_get(:"@#{callback_attr}")
+                  end
+                end # - each
+              end  # - each
+            end # - class_eval
+          end # - def self.inherited
+        end # - InheritAndHook
+        
         def self.included(base)
           base.class_eval do
-            def self.inherited(sublcass)
-              subclass.class_eval do
-                class << self
-                  attr_accessor :callback_tester_attrs
-                end
-                @callback_tester_attrs = []
-                CALLBACK_EVENTS.each do |ce|
-                  CALLBACK_TYPES.each do |ct|
-                    callback_name = :"#{ce}_#{ct}"
-                    callback_attr = :"called_#{callback_name}"
-                    callback_method, has_on_option = (ce.to_s =~ /_on/ ? [ce.to_s.gsub('_on',''), true] : [callback_name, false]) 
-                    @callback_tester_attrs << callback_attr
-                    attr_accessor callback_attr
-                    send( callback_method, (has_on_option ? {:on => ct} : {})) {
-                      instance_variable_set(:"@#{callback_attr}", true)
-                    }
-
-                    define_method :"#{callback_attr}?" do
-                      instance_variable_get(:"@#{callback_attr}")
-                    end
-                  end # - each
-                end  # - each
-              end # - class_eval
-            end # - def self.inherited
-            alias_method_chain :initialize, :callback_init
-          end # - class_eval 
+            class << self
+              include InheritAndHook
+              alias_method_chain :inherited, :hooks
+            end
+            alias_method_chain :initialize, :callback_flag_init
+          end
         end
         
-        def initialize_with_callback_init(*args)
+        def initialize_with_callback_flag_init(attributes = nil)
           reset_callback_flags!
-          initialize_without_callback_init(*args)
+          initialize_without_callback_flag_init(attributes)
         end
 
         def reset_callback_flags!
