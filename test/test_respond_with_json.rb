@@ -12,8 +12,9 @@ class TestRespondWithJson < ActionController::TestCase
     context ":index.json and block test" do
       setup do
         get :index, :format => 'json'
+        @expected_title = 'blog post 1'
       end
-      should respond_with_json { |json| json.first['blog']['title'] == 'blog post 1'}
+      should respond_with_json { |json| json.first['blog']['title'] == @expected_title}
     end
     
     context ":index.json and exact match" do

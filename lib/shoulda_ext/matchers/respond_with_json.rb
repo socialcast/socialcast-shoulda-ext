@@ -35,7 +35,6 @@ module ShouldaExt # :nodoc:
 
     class RespondWithJsonMatcher
       def initialize(context, description = nil, &block)
-        @context = context
         @block = block || lambda{|*| true }
         @description = description
         @exactly = false
@@ -46,6 +45,11 @@ module ShouldaExt # :nodoc:
         @exactly = true
         @expected_value = expected_json
         @block = block
+        self
+      end
+      
+      def in_context(context)
+        @context = context
         self
       end
       
