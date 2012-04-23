@@ -9,5 +9,4 @@ group :test do
   gem 'bundler', ">= 0"
   gem 'mocha', ">= 0"
   gem 'sqlite3-ruby', "~> 1.3.2"
-  gem 'ruby-debug', ">= 0"
 end
