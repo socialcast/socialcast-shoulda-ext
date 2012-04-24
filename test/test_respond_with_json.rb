@@ -1,13 +1,14 @@
-
-require File.join(File.dirname(__FILE__), 'helper')
+require File.expand_path("#{File.dirname(__FILE__)}/helper")
 
 class TestRespondWithJson < ActionController::TestCase
+  setup do
+    @controller = BlogsController.new
+    @request    = ActionController::TestRequest.new
+    @response   = ActionController::TestResponse.new
+  end
+  
   context "blogs controller" do
-    setup do
-      @controller = BlogsController.new
-      @request    = ActionController::TestRequest.new
-      @response   = ActionController::TestResponse.new
-    end
+    subject { @controller }
     
     context ":index.json and block test" do
       setup do

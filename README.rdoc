@@ -1,3 +1,4 @@
+{<img src="https://secure.travis-ci.org/socialcast/socialcast-shoulda-ext.png?branch=master" alt="Build Status" />}[http://travis-ci.org/socialcast/socialcast-shoulda-ext]
 
 = Socialcast Shoulda Extensions
 Adds new matchers and functionality to the shoulda test library
