@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
           end
     s.add_development_dependency(lib, dep)
   end
-  s.add_development_dependency 'shoulda', '>= 2.11.3'
+  s.add_development_dependency 'shoulda', '~> 2.11.3'
   s.add_development_dependency 'json', ">= 0"
   s.add_development_dependency 'bundler', ">= 0"
   s.add_development_dependency 'mocha', ">= 0"
